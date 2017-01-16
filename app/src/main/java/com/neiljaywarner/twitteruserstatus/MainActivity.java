@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 TwitterAuthUtils.generateEncodedBearerTokenCredentials());
 
         Call<BearerTokenResponse> bearerTokenCall =
-                twitterApi.getBearerToken(new BearerTokenRequest());
+                twitterApi.getBearerToken(TwitterApi.GRANT_TYPE_CLIENT);
 
         bearerTokenCall.enqueue(new Callback<BearerTokenResponse>() {
             @Override

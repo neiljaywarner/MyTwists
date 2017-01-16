@@ -3,6 +3,8 @@ package com.neiljaywarner.twitteruserstatus.network;
 import android.util.Base64;
 import android.util.Log;
 
+import com.neiljaywarner.twitteruserstatus.BuildConfig;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -11,6 +13,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -66,6 +69,14 @@ public class ServiceGenerator {
     public static TwitterApi createBearerKeyService(String credentials) {
 
         final String basic = "Basic " + credentials;
+
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            httpClient.addInterceptor(logging);
+        }
+
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Interceptor.Chain chain) throws IOException {
@@ -74,6 +85,7 @@ public class ServiceGenerator {
                 Request.Builder requestBuilder = original.newBuilder()
                         .header("Authorization", basic)
                         .header("Content-type", "application/x-www-form-urlencoded;charset=UTF-8")
+                        .header("Accept-Encoding", "gzip") // Accept-Encoding: gzip
                         .method(original.method(), original.body());
 
                 Request request = requestBuilder.build();

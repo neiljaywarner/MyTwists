@@ -3,6 +3,7 @@ package com.neiljaywarner.twitteruserstatus.network;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 /**
@@ -12,7 +13,7 @@ import retrofit2.http.POST;
 public interface TwitterApi {
 
 
-    String GRANT_TYPE_CLIENT = "client_credential";
+    String GRANT_TYPE_CLIENT = "client_credentials";
 
     //https://api.twitter.com/oauth2/token
     @POST("/oauth2/token")
@@ -20,4 +21,8 @@ public interface TwitterApi {
      * The only grantType is "client_credentials"
      */
     Call<BearerTokenResponse> getBearerToken(@Body BearerTokenRequest bearerTokenRequest);
+
+    @FormUrlEncoded
+    @POST("/oauth2/token")
+    Call<BearerTokenResponse> getBearerToken(@Field("grant_type") String grantType);
 }
