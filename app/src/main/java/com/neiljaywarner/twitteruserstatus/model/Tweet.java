@@ -11,12 +11,11 @@ public class Tweet {
     @SerializedName("created_at")
     @Expose
     public String createdAt;
-    @SerializedName("id")
-    @Expose
-    public Integer id;
+
     @SerializedName("id_str")
     @Expose
     public String idStr;
+
     @SerializedName("text")
     @Expose
     public String text;
