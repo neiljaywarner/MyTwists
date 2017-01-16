@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 makeGetTweetsNetworkCall(mEditTextScreenName.getText().toString());
             }
         });
+        //todo: cardviews and clickable links.
     }
 
     private  void updateList(List<Tweet> tweets) {
