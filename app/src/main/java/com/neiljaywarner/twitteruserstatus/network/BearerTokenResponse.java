@@ -1,5 +1,8 @@
 package com.neiljaywarner.twitteruserstatus.network;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by neil on 1/15/17.
  * Response from https://api.twitter.com/oauth2/token
@@ -8,6 +11,27 @@ package com.neiljaywarner.twitteruserstatus.network;
  */
 
 public class BearerTokenResponse {
-    public String token_type;
-    public String access_token;
+    @SerializedName("token_type")
+    @Expose
+    private String tokenType;
+    @SerializedName("access_token")
+    @Expose
+    private String accessToken;
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.neiljaywarner.twitteruserstatus.network.AccessToken;
 import com.neiljaywarner.twitteruserstatus.network.BearerTokenRequest;
 import com.neiljaywarner.twitteruserstatus.network.BearerTokenResponse;
 import com.neiljaywarner.twitteruserstatus.network.ServiceGenerator;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Stetho.initializeWithDefaults(this);
 
         //TODO: Validate with a little OO of some sort, and/or in view
         // done button...
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeGetTweetsNetworkCall() {
-
+        Log.d("NJW", "***** GET TWEETS NETWORK CALL");
     }
 
     private void retrieveBearerToken() {
@@ -59,14 +61,12 @@ public class MainActivity extends AppCompatActivity {
                     BearerTokenResponse bearerTokenResponse = response.body();
 
                     //Validate token_type per twitter docs
-                    Log.d(TAG, "bearerTokenCall:token_type=" + bearerTokenResponse.token_type);
-                    if (bearerTokenResponse.token_type.equalsIgnoreCase("bearer")) {
+                    Log.d(TAG, "bearerTokenCall:token_type=" + bearerTokenResponse.getTokenType());
+
                         TwitterAuthUtils.saveBearerTokenToPrefs(MainActivity.this,
-                                bearerTokenResponse.access_token);
+                                bearerTokenResponse.getAccessToken());
                         makeGetTweetsNetworkCall();
-                    } else {
-                        Log.wtf(TAG, "Error: Bearer token result from twitter should be token type 'bearer'");
-                    }
+
                 } else {
                     Log.e(TAG, "Response invalid, check consumer key/secret combination if 403");
                 }

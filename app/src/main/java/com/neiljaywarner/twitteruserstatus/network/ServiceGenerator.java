@@ -1,6 +1,7 @@
 package com.neiljaywarner.twitteruserstatus.network;
 
 import android.util.Base64;
+import android.util.JsonReader;
 import android.util.Log;
 
 import com.neiljaywarner.twitteruserstatus.BuildConfig;
@@ -57,6 +58,8 @@ public class ServiceGenerator {
         }
 
         OkHttpClient client = httpClient.build();
+        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create();
+        ;
         Retrofit retrofit = builder.client(client).build();
         return retrofit.create(serviceClass);
     }
@@ -69,11 +72,10 @@ public class ServiceGenerator {
     public static TwitterApi createBearerKeyService(String credentials) {
 
         final String basic = "Basic " + credentials;
-
+        Log.e("NJWbasic", basic);
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
             httpClient.addInterceptor(logging);
         }
 
@@ -84,18 +86,24 @@ public class ServiceGenerator {
 
                 Request.Builder requestBuilder = original.newBuilder()
                         .header("Authorization", basic)
-                        .header("Content-type", "application/x-www-form-urlencoded;charset=UTF-8")
-                        .header("Accept-Encoding", "gzip") // Accept-Encoding: gzip
+                        .header("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
                         .method(original.method(), original.body());
+                // NOTE: Must leave accept-encoding gzip off so okhttp automatically unzips it.
+                // http://stackoverflow.com/questions/33889840/retrofit-and-okhttp-gzip-decode
 
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
         });
 
-
         OkHttpClient client = httpClient.build();
+
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create());
+
         Retrofit retrofit = builder.client(client).build();
+
         return retrofit.create(TwitterApi.class);
     }
 }
