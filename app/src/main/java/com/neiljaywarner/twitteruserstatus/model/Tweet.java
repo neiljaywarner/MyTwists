@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Tweet {
+    // Note: It maybe OK to expose fields and not use getters in this case since it's such a thin class.
     @SerializedName("created_at")
     @Expose
     public String createdAt;
@@ -19,4 +20,6 @@ public class Tweet {
     @SerializedName("text")
     @Expose
     public String text;
+
+    // We could add "User" to get the picture via the profile_image_url, that might be nice.
 }
