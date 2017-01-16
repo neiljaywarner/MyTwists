@@ -7,6 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.neiljaywarner.twitteruserstatus.model.Tweet;
 import com.neiljaywarner.twitteruserstatus.network.BearerTokenResponse;
@@ -19,12 +22,12 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.HTTP;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "NJW";
     private RecyclerView recyclerView;
+    private EditText mEditTextScreenName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         //TODO: Butterknife
 
+        mEditTextScreenName = (EditText) findViewById(R.id.editTextTwitterUserName);
+        mEditTextScreenName.setText("BarackObama");
+
         //TODO: Validate with a little OO of some sort, and/or in view
         // done button...
         // < 20 characters, alphanumberic + _ only...
@@ -44,10 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(TwitterAuthUtils.getBearerTokenFromPrefs(this))) {
             retrieveBearerToken();
-        } else {
-            makeGetTweetsNetworkCall();
         }
+        //TOOD: Spinner before even allow typing or screen shown if no bearerToken
 
+        findViewById(R.id.buttonSubmit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeGetTweetsNetworkCall(mEditTextScreenName.getText().toString());
+            }
+        });
     }
 
     private  void updateList(List<Tweet> tweets) {
@@ -56,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(itemArrayAdapter);
     }
 
-    private void makeGetTweetsNetworkCall() {
+    private void makeGetTweetsNetworkCall(String screenName) {
         Log.d("NJW", "***** GET TWEETS NETWORK CALL");
 
         String authToken = TwitterAuthUtils.getBearerTokenFromPrefs(this);
         TwitterApi twitterApi = ServiceGenerator.createService(TwitterApi.class, authToken);
 
         Call<List<Tweet>> tweetsCall =
-                twitterApi.getTweets();
+                twitterApi.getTweets(screenName);
 
         tweetsCall.enqueue(new Callback<List<Tweet>>() {
             @Override
@@ -86,6 +97,11 @@ public class MainActivity extends AppCompatActivity {
                         + t.getMessage());
             }
         });
+
+
+        //Todo; butterknife onclick
+
+
     }
 
     private void retrieveBearerToken() {
@@ -108,7 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
                         TwitterAuthUtils.saveBearerTokenToPrefs(MainActivity.this,
                                 bearerTokenResponse.getAccessToken());
-                        makeGetTweetsNetworkCall();
+                        //makeGetTweetsNetworkCall();
+                        // TODO: Spinner...
 
                 } else {
                     Log.e(TAG, "Response invalid, check consumer key/secret combination if 403");
