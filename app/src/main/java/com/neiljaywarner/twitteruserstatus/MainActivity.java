@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.neiljaywarner.twitteruserstatus.model.Tweet;
 import com.neiljaywarner.twitteruserstatus.network.AccessToken;
 import com.neiljaywarner.twitteruserstatus.network.BearerTokenRequest;
 import com.neiljaywarner.twitteruserstatus.network.BearerTokenResponse;
 import com.neiljaywarner.twitteruserstatus.network.ServiceGenerator;
 import com.neiljaywarner.twitteruserstatus.network.TwitterApi;
 import com.neiljaywarner.twitteruserstatus.network.TwitterAuthUtils;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +46,32 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeGetTweetsNetworkCall() {
         Log.d("NJW", "***** GET TWEETS NETWORK CALL");
+
+        String authToken = TwitterAuthUtils.getBearerTokenFromPrefs(this);
+        TwitterApi twitterApi = ServiceGenerator.createService(TwitterApi.class, authToken);
+
+        Call<List<Tweet>> tweetsCall =
+                twitterApi.getTweets();
+
+        tweetsCall.enqueue(new Callback<List<Tweet>>() {
+            @Override
+            public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
+                Log.d(TAG, "tweetsCall:Response code: " + response.code());
+                if (response.code() == 200) {
+                    List<Tweet> tweets = response.body();
+
+                    Log.d("NJW", "numTWeets:" + tweets.size());
+                    Log.d("NJW", "FirstTweetText:"+ tweets.get(0).text);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Tweet>> call, Throwable t) {
+                Log.e(TAG, "tweetsCall Failure:" + call.request().toString()
+                        + t.getMessage());
+            }
+        });
     }
 
     private void retrieveBearerToken() {

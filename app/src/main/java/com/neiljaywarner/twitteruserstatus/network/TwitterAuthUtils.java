@@ -28,14 +28,14 @@ public class TwitterAuthUtils {
     public static String generateEncodedBearerTokenCredentials() {
         String consumerSecret = BuildConfig.TWIST_API_SECRET;
         String consumerKey = BuildConfig.TWIST_API_KEY;
-        /*
+
         try {
             consumerSecret = URLEncoder.encode(consumerSecret, "UTF-8");
             consumerKey = URLEncoder.encode(consumerKey, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             Log.wtf(TAG, "UTF-8 should definitely be a supported encoding scheme.");
         }
-        */
+
 
         String combinedCredentials = consumerKey + ":" + consumerSecret;
         Log.e("NJW", "combinedCredentials:" + combinedCredentials);

@@ -1,9 +1,14 @@
 package com.neiljaywarner.twitteruserstatus.network;
 
+import com.neiljaywarner.twitteruserstatus.model.Tweet;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -25,4 +30,10 @@ public interface TwitterApi {
     @FormUrlEncoded
     @POST("/oauth2/token")
     Call<BearerTokenResponse> getBearerToken(@Field("grant_type") String grantType);
+
+
+    // https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2
+    @GET("1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2")
+    Call<List<Tweet>> getTweets();
+
 }
