@@ -24,6 +24,10 @@ android {
         //TODO: Note: IN production these would probably be configured to use Jenkins
         // but in this case these should match fields in ~/.gradle/gradle.properties
         // b/c these are like passwords and should not be checked into source control or shared.
+        /* e.g. in gradle.properties please put
+        MyTwistTwitterApiKey = "apiKey"
+        MyTwistTwitterConsumerSecret = "consumerSecret"
+         */
     }
 }
 

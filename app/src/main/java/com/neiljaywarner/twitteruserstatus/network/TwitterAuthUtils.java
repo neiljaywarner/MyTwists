@@ -38,7 +38,6 @@ public class TwitterAuthUtils {
 
 
         String combinedCredentials = consumerKey + ":" + consumerSecret;
-        Log.e("NJW", "combinedCredentials:" + combinedCredentials);
         // Base64 encode the string; discovered via dzone.com NO_WRAP rather than default.
         String base64Encoded = Base64.encodeToString(combinedCredentials.getBytes(),
                 Base64.NO_WRAP);

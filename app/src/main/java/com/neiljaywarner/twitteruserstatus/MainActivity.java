@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         return isValid;
     }
     private void makeGetTweetsNetworkCall(final String screenName) {
-        Log.d("NJW", "***** GET TWEETS NETWORK CALL");
+        Log.d(TAG, "***** GET TWEETS NETWORK CALL");
 
         if (!isScreenNameValid(screenName)) {
             mEditTextScreenName.setError(getString(R.string.invalid_screen_name));
