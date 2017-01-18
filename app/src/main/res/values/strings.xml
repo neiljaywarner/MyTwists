@@ -2,5 +2,11 @@
     <string name="app_name">Twitter User Status</string>
 
     <string name="twitter_screen_name">Twitter Screen Name</string>
+    <string name="fetch">Go</string>
+    <string name="invalid_screen_name">Screen name must be less than 20 characters</string>
+
+    <string name="invalid_screen_name_server_error">Screen name not found or server error, please check and try again.</string>
+    <string name="server_error">Server error, please check network connection and try again.</string>
+
 
 </resources>

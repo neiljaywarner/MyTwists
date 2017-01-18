@@ -13,7 +13,6 @@
 
 
 
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -27,7 +26,10 @@
             android:hint="@string/twitter_screen_name"
             >
 
+            <!-- Singleline=true to get 'done' button -->
             <android.support.design.widget.TextInputEditText
+                android:maxLines="1"
+                android:singleLine="true"
                 android:id="@+id/editTextTwitterUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -35,9 +37,12 @@
 
         <!-- TODO: Image. or internalize. intl content description if nothing else. -->
         <Button
+            android:background="@color/colorPrimary"
+            android:padding="1dp"
             android:layout_gravity="bottom"
             android:id="@+id/buttonSubmit"
-            android:text="GO"
+            android:text="@string/fetch"
+            android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

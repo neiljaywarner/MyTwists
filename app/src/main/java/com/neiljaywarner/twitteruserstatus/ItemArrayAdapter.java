@@ -1,7 +1,6 @@
 package com.neiljaywarner.twitteruserstatus;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 
 import com.neiljaywarner.twitteruserstatus.model.Tweet;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,16 +49,12 @@ public class ItemArrayAdapter extends RecyclerView.Adapter<ItemArrayAdapter.View
     }
 
     // Static inner class to initialize the views of rows
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder  {
         public TextView item;
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
             item = (TextView) itemView.findViewById(R.id.textViewTweetText);
         }
-        @Override
-        public void onClick(View view) {
-            Log.d("onclick", "onClick " + getLayoutPosition() + " " + item.getText());
-        }
+
     }
 }
