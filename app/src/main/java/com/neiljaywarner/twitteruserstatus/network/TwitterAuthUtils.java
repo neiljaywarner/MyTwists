@@ -26,8 +26,8 @@ public class TwitterAuthUtils {
      * @return Credentials that can be sent to https://api.twitter.com/oauth2/token
      */
     public static String generateEncodedBearerTokenCredentials() {
-        String consumerSecret = BuildConfig.TWIST_API_SECRET;
-        String consumerKey = BuildConfig.TWIST_API_KEY;
+        String consumerSecret = BuildConfig.NJW_MV_API_SECRET;
+        String consumerKey = BuildConfig.NJW_MV_API_KEY;
 
         try {
             consumerSecret = URLEncoder.encode(consumerSecret, "UTF-8");

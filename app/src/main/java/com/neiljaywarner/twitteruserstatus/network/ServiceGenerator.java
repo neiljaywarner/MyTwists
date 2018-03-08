@@ -19,8 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ServiceGenerator {
-
-    public static final String API_BASE_URL = "https://api.twitter.com/";
+// https://www.memverse.com/oauth/token
+    public static final String API_BASE_URL = "https://www.memverse.com/";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 

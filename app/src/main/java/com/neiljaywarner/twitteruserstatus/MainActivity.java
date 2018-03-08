@@ -102,18 +102,19 @@ public class MainActivity extends AppCompatActivity {
         String authToken = TwitterAuthUtils.getBearerTokenFromPrefs(this);
         TwitterApi twitterApi = ServiceGenerator.createService(TwitterApi.class, authToken);
 
-        Call<List<Tweet>> tweetsCall =
+        Call<com.neiljaywarner.twitteruserstatus.model.Response> tweetsCall =
                 twitterApi.getTweets(screenName);
 
         final Context context = this;
-        tweetsCall.enqueue(new Callback<List<Tweet>>() {
+        tweetsCall.enqueue(new Callback<com.neiljaywarner.twitteruserstatus.model.Response>() {
             @Override
-            public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
+            public void onResponse(Call<com.neiljaywarner.twitteruserstatus.model.Response> call, Response<com.neiljaywarner.twitteruserstatus.model.Response> response) {
                 Log.d(TAG, "tweetsCall:Response code: " + response.code());
                 if (response.code() == 200) {
                     MainActivity.this.setTitle(screenName);
-                    List<Tweet> tweets = response.body();
-                    updateList(tweets);
+                    com.neiljaywarner.twitteruserstatus.model.Response tweets = response.body();
+
+                    updateList(tweets.getTweetList());
                 } else {
                     //TODO: Could check other response codes or if have network connection
                     showScreenNameErrorDialog(context, R.string.invalid_screen_name);
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Tweet>> call, Throwable t) {
+            public void onFailure(Call<com.neiljaywarner.twitteruserstatus.model.Response> call, Throwable t) {
                 Log.e(TAG, "tweetsCall Failure:" + call.request().toString()
                         + t.getMessage());
                 showScreenNameErrorDialog(context, R.string.invalid_screen_name_server_error);

@@ -8,14 +8,6 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Tweet {
-    // Note: It maybe OK to expose fields and not use getters in this case since it's such a thin class.
-    @SerializedName("created_at")
-    @Expose
-    public String createdAt;
-
-    @SerializedName("id_str")
-    @Expose
-    public String idStr;
 
     @SerializedName("text")
     @Expose
