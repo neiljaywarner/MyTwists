@@ -9,16 +9,16 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.neiljaywarner.twitteruserstatus.model.MemverseResponse;
 import com.neiljaywarner.twitteruserstatus.model.Tweet;
 import com.neiljaywarner.twitteruserstatus.network.BearerTokenResponse;
+import com.neiljaywarner.twitteruserstatus.network.PasswordTokenRequest;
 import com.neiljaywarner.twitteruserstatus.network.ServiceGenerator;
 import com.neiljaywarner.twitteruserstatus.network.TwitterApi;
 import com.neiljaywarner.twitteruserstatus.network.TwitterAuthUtils;
@@ -51,24 +51,20 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int editorActionId, KeyEvent keyEvent) {
 
                 if (editorActionId == EditorInfo.IME_ACTION_NEXT) {
-                    makeGetTweetsNetworkCall(mEditTextScreenName.getText().toString());
+                    makeGetMemversesNetworkCall(mEditTextScreenName.getText().toString());
                 }
                 return true;
             }
         });
 
 
-        if (TextUtils.isEmpty(TwitterAuthUtils.getBearerTokenFromPrefs(this))) {
+        //if (TextUtils.isEmpty(TwitterAuthUtils.getBearerTokenFromPrefs(this))) {
             retrieveBearerToken();
-        }
+        //}
         //TOOD: Spinner before even allow typing or screen shown if no bearerToken
 
-        findViewById(R.id.buttonSubmit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                makeGetTweetsNetworkCall(mEditTextScreenName.getText().toString());
-            }
-        });
+                makeGetMemversesNetworkCall(mEditTextScreenName.getText().toString());
+
         //todo: cardviews and clickable links.
     }
 
@@ -92,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
         return isValid;
     }
-    private void makeGetTweetsNetworkCall(final String screenName) {
-        Log.d(TAG, "***** GET TWEETS NETWORK CALL");
+    private void makeGetMemversesNetworkCall(final String screenName) {
+        Log.d(TAG, "***** makeGetMemversesNetworkCall");
 
         if (!isScreenNameValid(screenName)) {
             mEditTextScreenName.setError(getString(R.string.invalid_screen_name));
@@ -102,19 +98,18 @@ public class MainActivity extends AppCompatActivity {
         String authToken = TwitterAuthUtils.getBearerTokenFromPrefs(this);
         TwitterApi twitterApi = ServiceGenerator.createService(TwitterApi.class, authToken);
 
-        Call<com.neiljaywarner.twitteruserstatus.model.Response> tweetsCall =
-                twitterApi.getTweets(screenName);
+        Call<MemverseResponse> tweetsCall = twitterApi.getMemverses();
 
         final Context context = this;
-        tweetsCall.enqueue(new Callback<com.neiljaywarner.twitteruserstatus.model.Response>() {
+        tweetsCall.enqueue(new Callback<MemverseResponse>() {
             @Override
-            public void onResponse(Call<com.neiljaywarner.twitteruserstatus.model.Response> call, Response<com.neiljaywarner.twitteruserstatus.model.Response> response) {
+            public void onResponse(Call<MemverseResponse> call, Response<MemverseResponse> response) {
                 Log.d(TAG, "tweetsCall:Response code: " + response.code());
                 if (response.code() == 200) {
                     MainActivity.this.setTitle(screenName);
-                    com.neiljaywarner.twitteruserstatus.model.Response tweets = response.body();
-
-                    updateList(tweets.getTweetList());
+                    MemverseResponse tweets = response.body();
+                    Log.d("NJW", "count=" + tweets.getCount());
+                    //updateList(tweets.getTweetList());
                 } else {
                     //TODO: Could check other response codes or if have network connection
                     showScreenNameErrorDialog(context, R.string.invalid_screen_name);
@@ -122,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<com.neiljaywarner.twitteruserstatus.model.Response> call, Throwable t) {
+            public void onFailure(Call<MemverseResponse> call, Throwable t) {
                 Log.e(TAG, "tweetsCall Failure:" + call.request().toString()
                         + t.getMessage());
                 showScreenNameErrorDialog(context, R.string.invalid_screen_name_server_error);
@@ -155,8 +150,14 @@ public class MainActivity extends AppCompatActivity {
         TwitterApi twitterApi = ServiceGenerator.createBearerKeyService(
                 TwitterAuthUtils.generateEncodedBearerTokenCredentials());
 
-        Call<BearerTokenResponse> bearerTokenCall =
-                twitterApi.getBearerToken(TwitterApi.GRANT_TYPE_CLIENT);
+        //Call<BearerTokenResponse> bearerTokenCall = twitterApi.getBearerToken(TwitterApi.GRANT_TYPE_CLIENT);
+        PasswordTokenRequest passwordTokenRequest = new PasswordTokenRequest();
+        Call<BearerTokenResponse> bearerTokenCall = twitterApi.getBearerToken(passwordTokenRequest);
+        // TODO: Consider https://auth0.com/docs/api-auth/grant/authorization-code-pkce
+
+        // also consider https://github.com/openid/AppAuth-Android
+        // also consider https://github.com/auth0/Auth0.Android
+
 
         bearerTokenCall.enqueue(new Callback<BearerTokenResponse>() {
             @Override
@@ -184,5 +185,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    // TODO: Pick kotlin secure sharedprefs to encrypt token
+    // ** it never expires
 
 }
+
+// Note:
+// iOS basic getMemverses is https://github.com/avitus/Memverse_iOS/blob/master/Memverse_iOS/MemorizeViewController.swift
+// wit realm local db fetch before today's date and pending

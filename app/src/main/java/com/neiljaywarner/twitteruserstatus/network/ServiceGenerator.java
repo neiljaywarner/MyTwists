@@ -94,6 +94,12 @@ public class ServiceGenerator {
             }
         });
 
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            httpClient.addInterceptor(logging);
+        }
+
         OkHttpClient client = httpClient.build();
 
         Retrofit.Builder builder = new Retrofit.Builder()
